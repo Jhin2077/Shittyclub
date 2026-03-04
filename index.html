@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHITTYCLUB</title>
+  <!-- 引入 98.css 还原 Windows 95 样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/98.css">
+  <!-- 引入 Tailwind CSS 用于快速布局 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #008080;
+      overflow: hidden;
+      font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;
+      user-select: none;
+    }
+    .window {
+      position: absolute;
+      display: none;
+      flex-direction: column;
+      box-shadow: inset 1px 1px 0px 1px #dfdfdf, inset -1px -1px 0 1px #0a0a0a, inset 2px 2px 0 2px #fff, inset -2px -2px 0 2px #808080;
+    }
+    .window.active {
+      display: flex;
+    }
+    .desktop-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 6rem;
+      height: 6rem;
+      margin: 0.5rem;
+      cursor: pointer;
+      color: white;
+      border-radius: 0.25rem;
+      padding: 0.5rem;
+    }
+    .desktop-icon:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    .taskbar-btn {
+      box-shadow: inset 1px 1px 0px #fff, inset -1px -1px 0px #0a0a0a, inset 2px 2px 0px #dfdfdf, inset -2px -2px 0px #808080;
+    }
+    .taskbar-btn:active, .taskbar-btn.active {
+      box-shadow: inset 1px 1px 0px #0a0a0a, inset -1px -1px 0px #fff, inset 2px 2px 0px #808080, inset -2px -2px 0px #dfdfdf;
+      background-color: #dfdfdf;
+    }
+  </style>
+</head>
+<body class="w-screen h-screen relative">
+  <!-- Desktop Icons -->
+  <div class="flex flex-col flex-wrap h-[calc(100vh-32px)] p-2 content-start">
+    <div class="desktop-icon" onclick="playSound('click')" ondblclick="openWindow('movie')">
+      <div class="text-4xl mb-2 drop-shadow-md">🖥️</div>
+      <span class="text-xs text-center drop-shadow-md break-words w-full">SHITTY MOVIE</span>
+    </div>
+    <div class="desktop-icon" onclick="playSound('click')" ondblclick="openWindow('games')">
+      <div class="text-4xl mb-2 drop-shadow-md">🌐</div>
+      <span class="text-xs text-center drop-shadow-md break-words w-full">SHITTY GAMES</span>
+    </div>
+    <div class="desktop-icon" onclick="playSound('click')" ondblclick="openWindow('music')">
+      <div class="text-4xl mb-2 drop-shadow-md">🗑️</div>
+      <span class="text-xs text-center drop-shadow-md break-words w-full">SHITTY MUSIC</span>
+    </div>
+    <div class="desktop-icon" onclick="playSound('click')" ondblclick="openWindow('readme')">
+      <div class="text-4xl mb-2 drop-shadow-md">💩</div>
+      <span class="text-xs text-center drop-shadow-md break-words w-full">Eat me.txt</span>
+    </div>
+    <div class="desktop-icon" onclick="playSound('click')" ondblclick="openWindow('register')">
+      <div class="text-4xl mb-2 drop-shadow-md">👥</div>
+      <span class="text-xs text-center drop-shadow-md break-words w-full">注册 / Register</span>
+    </div>
+    <div class="desktop-icon" onclick="playSound('click')" ondblclick="openWindow('upload')">
+      <div class="text-4xl mb-2 drop-shadow-md">📁</div>
+      <span class="text-xs text-center drop-shadow-md break-words w-full">上传 / Upload</span>
+    </div>
+    <div class="desktop-icon" onclick="playSound('click')" ondblclick="openWindow('pixelator')">
+      <div class="text-4xl mb-2 drop-shadow-md">👾</div>
+      <span class="text-xs text-center drop-shadow-md break-words w-full">SHITTY PIXELATOR</span>
+    </div>
+  </div>
+
+  <!-- Windows -->
+  
+  <!-- Movie Window -->
+  <div id="movie" class="window" style="top: 50px; left: 50px; width: 600px; height: 400px;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text">COT Media Player (SHITTY MOVIE)</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close" onclick="closeWindow('movie')"></button>
+      </div>
+    </div>
+    <div class="window-body flex-1 overflow-auto m-0 p-2 flex gap-2">
+      <div class="flex-1 flex flex-col bg-black border-[2px] border-gray-500 p-1">
+        <div class="flex-1 bg-gray-900 flex items-center justify-center text-white text-xs overflow-hidden relative">
+          <div class="absolute inset-0 opacity-20 bg-[url('https://picsum.photos/seed/static/400/300')] bg-cover mix-blend-screen animate-pulse"></div>
+          <span class="animate-bounce">NO SIGNAL / 信号丢失</span>
+        </div>
+        <div class="h-8 mt-2 flex items-center gap-2">
+          <button class="px-2 py-1">▶</button>
+          <button class="px-2 py-1">⏸</button>
+          <button class="px-2 py-1">⏹</button>
+          <div class="flex-1 h-4 bg-gray-800 border-[inset] border-2 border-gray-600 relative">
+            <div class="absolute top-0 left-0 bottom-0 w-1/3 bg-blue-800"></div>
+          </div>
+        </div>
+      </div>
+      <div class="w-48 bg-white border-[2px] border-gray-500 p-2 text-xs font-mono overflow-y-auto">
+        <strong>Notepad.exe</strong>
+        <hr class="my-1" />
+        <p>鉴定意见 / Appraisal:</p>
+        <p class="mt-2 text-red-600">该导演在拍摄时疑似处于降智状态，画面频率与人类脑电波不符。</p>
+        <p class="mt-2 text-red-600">The director seemed to be in a state of intellectual degradation during filming. The frame rate does not match human brainwaves.</p>
+        <p class="mt-4">-- Dr Jhin</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Games Window -->
+  <div id="games" class="window" style="top: 100px; left: 100px; width: 500px; height: 350px;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text" id="games-title">Explorer - C:\CURSED_ROM (SHITTY GAMES)</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close" onclick="closeWindow('games')"></button>
+      </div>
+    </div>
+    <div class="window-body flex-1 overflow-auto m-0 p-2 bg-white border-[2px] border-gray-500">
+      <table class="w-full text-xs text-left">
+        <thead>
+          <tr class="border-b border-gray-300">
+            <th class="pb-1">Name / 名称</th>
+            <th class="pb-1">Size / 大小</th>
+            <th class="pb-1">Type / 类型</th>
+          </tr>
+        </thead>
+        <tbody id="file-list">
+          <!-- Files will be injected here by JS -->
+        </tbody>
+      </table>
+      <div class="mt-4 p-2 bg-yellow-200 border border-yellow-400 text-xs inline-block shadow-md transform rotate-2 text-black">
+        <p><strong>COT Note:</strong> 这不是BUG，这TM就是这么设计的！</p>
+        <p>This ain't a BUG. It’s fucking designed that way.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Music Window -->
+  <div id="music" class="window" style="top: 150px; left: 150px; width: 350px; height: 200px;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text">Winamp Skin (SHITTY MUSIC)</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close" onclick="closeWindow('music')"></button>
+      </div>
+    </div>
+    <div class="window-body flex-1 overflow-auto m-0 p-2 bg-[#111] text-[#0f0] font-mono flex flex-col border-[2px] border-gray-600">
+      <div class="text-center text-xs mb-2 text-red-500 animate-pulse font-bold">
+        WARNING: AUDITORY CONTAMINATION<br/>警告：听觉污染
+      </div>
+      <div class="flex-1 border border-[#0f0] p-1 flex items-end gap-1 mb-2">
+        <div class="w-full bg-[#0f0]" style="height: 30%"></div>
+        <div class="w-full bg-[#0f0]" style="height: 80%"></div>
+        <div class="w-full bg-[#0f0]" style="height: 50%"></div>
+        <div class="w-full bg-[#0f0]" style="height: 100%"></div>
+        <div class="w-full bg-[#0f0]" style="height: 20%"></div>
+        <div class="w-full bg-[#0f0]" style="height: 70%"></div>
+        <div class="w-full bg-[#0f0]" style="height: 90%"></div>
+        <div class="w-full bg-[#0f0]" style="height: 40%"></div>
+        <div class="w-full bg-[#0f0]" style="height: 60%"></div>
+        <div class="w-full bg-[#0f0]" style="height: 85%"></div>
+      </div>
+      <div class="flex justify-between items-center text-xs">
+        <span class="truncate flex-1 mr-2" id="music-title">Stevie Wonder - Superstition</span>
+        <div class="flex gap-1">
+          <button class="bg-gray-700 text-white px-2 py-1 border border-gray-500" title="Open Local File" onclick="playSound('click'); document.getElementById('music-upload').click();">⏏️</button>
+          <button class="bg-gray-700 text-white px-2 py-1 border border-gray-500" onclick="playSound('click'); stopMusic();">⏪</button>
+          <button class="bg-gray-700 text-white px-2 py-1 border border-gray-500" onclick="playSound('click'); playMusic();">▶</button>
+          <button class="bg-gray-700 text-white px-2 py-1 border border-gray-500" onclick="playSound('click'); stopMusic();">⏸</button>
+          <button class="bg-gray-700 text-white px-2 py-1 border border-gray-500" onclick="playSound('click'); stopMusic();">⏩</button>
+        </div>
+      </div>
+      <input type="file" id="music-upload" accept="audio/*" style="display: none;" onchange="handleMusicUpload(event)">
+      <div id="music-player-container"></div>
+    </div>
+  </div>
+
+  <!-- Readme Window -->
+  <div id="readme" class="window" style="top: 200px; left: 200px; width: 400px; height: 300px;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text">Eat me.txt - Notepad</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close" onclick="closeWindow('readme')"></button>
+      </div>
+    </div>
+    <div class="window-body flex-1 m-0 p-0">
+      <textarea class="w-full h-full resize-none font-mono text-sm p-2 outline-none border-none" readonly>关于《松木镇怪谈》的模糊线索...
+Vague clues about "Pines Town Urban Legend"...
+
+1996年，松木镇发生了一起未解之谜。
+In 1996, an unsolved mystery occurred in Pines Town.
+
+所有的监控录像都显示着同样的雪花点。
+All surveillance footage showed the same static.
+
+如果你找到了 PINEWOOD.EXE，千万不要...
+If you find PINEWOOD.EXE, whatever you do, do not...
+
+[DATA EXPUNGED / 数据删除]</textarea>
+    </div>
+  </div>
+
+  <!-- Register Window -->
+  <div id="register" class="window" style="top: 150px; left: 250px; width: 320px; height: 280px;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text">注册 / Register</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close" onclick="closeWindow('register')"></button>
+      </div>
+    </div>
+    <div class="window-body flex-1 overflow-auto m-0 p-2">
+      <div class="flex flex-col gap-3 p-2 text-sm">
+        <p class="mb-2">加入 COT 探员名单 / Join COT Agent List</p>
+        <div class="field-row">
+          <label for="username">用户名 / User:</label>
+          <input id="username" type="text" />
+        </div>
+        <div class="field-row">
+          <label for="email">邮箱 / Email:</label>
+          <input id="email" type="email" />
+        </div>
+        <div class="field-row">
+          <label for="password">密码 / Pass:</label>
+          <input id="password" type="password" />
+        </div>
+        <div class="field-row mt-2">
+          <input id="agree" type="checkbox" />
+          <label for="agree">我愿意承担过劳死风险 / I accept the risk of death from overwork 💀</label>
+        </div>
+        <button class="mt-4" onclick="closeWindow('register')">
+          提交注册 / Submit Registration
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Window -->
+  <div id="upload" class="window" style="top: 200px; left: 300px; width: 350px; height: 250px;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text">上传 / Upload</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close" onclick="closeWindow('upload')"></button>
+      </div>
+    </div>
+    <div class="window-body flex-1 overflow-auto m-0 p-2">
+      <div class="flex flex-col gap-3 p-2 text-sm">
+        <p>上传你的“烂货” / Upload your "Shitty" stuff</p>
+        <div class="field-row">
+          <label for="file">文件 / File:</label>
+          <input id="file" type="file" />
+        </div>
+        <div class="field-row flex-col items-start gap-1">
+          <label for="desc">描述 / Description:</label>
+          <textarea id="desc" rows="3" class="w-full"></textarea>
+        </div>
+        <button class="mt-2" onclick="openWindow('error'); closeWindow('upload');">
+          开始上传 / Start Upload
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ad Window -->
+  <div id="ad" class="window active" style="top: 50px; right: 50px; left: auto; width: 300px; height: 200px;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text">SHITTY Ad</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close" onclick="closeWindow('ad')"></button>
+      </div>
+    </div>
+    <div class="window-body flex-1 overflow-auto m-0 p-0">
+      <div class="flex flex-col items-center justify-center h-full text-center bg-[#ff00ff] text-yellow-300 p-4 border-4 border-dashed border-yellow-300 animate-pulse cursor-pointer" onclick="playSound('click'); openWindow('donation');">
+        <h2 class="text-xl font-bold mb-2 drop-shadow-md">为大家垃圾作品充能！</h2>
+        <h2 class="text-lg font-bold mb-4 drop-shadow-md">Charge for everyone's shitty works!</h2>
+        <p class="text-white text-sm bg-black p-1">捐赠 3 毛钱，您的 ID 就会出现在“牺牲探员名单”里。</p>
+        <p class="text-white text-xs bg-black p-1 mt-1">Donate ￥0.3, your ID will appear on the "Sacrificed Agents List".</p>
+        <button class="mt-4 px-4 py-2 bg-yellow-400 text-black font-bold border-2 border-white hover:bg-yellow-500">
+          CLICK HERE / 点击这里
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Donation Window -->
+  <div id="donation" class="window" style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 400px;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text">捐赠 / Donate</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close" onclick="closeWindow('donation')"></button>
+      </div>
+    </div>
+    <div class="window-body flex-1 overflow-auto m-0 p-2 bg-white border-[2px] border-gray-500">
+      <div class="text-center mb-2">
+        <h2 class="text-lg font-bold text-red-600">COT牺牲探员名单</h2>
+        <p class="text-xs text-gray-600">￥0.30</p>
+      </div>
+      <div class="w-full flex-1 border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-100 relative overflow-hidden" style="height: 280px;">
+         <img src="donation-qr.png" alt="Donation QR Code" class="max-w-full max-h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+         <div class="text-center p-4 hidden">
+           <p class="text-xs text-gray-500 mb-2">请将您上传的图片重命名为 <strong>donation-qr.png</strong> 并放在与此 HTML 文件相同的目录中。</p>
+           <p class="text-xs text-gray-500">Please rename your uploaded image to <strong>donation-qr.png</strong> and place it in the same directory as this HTML file.</p>
+         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pixelator Window -->
+  <div id="pixelator" class="window" style="top: 150px; left: 200px; width: 450px; height: 500px;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text">SHITTY PIXELATOR (像素转换器)</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close" onclick="closeWindow('pixelator')"></button>
+      </div>
+    </div>
+    <div class="window-body flex-1 overflow-auto m-0 p-2 bg-[#c0c0c0] border-[2px] border-gray-500 flex flex-col">
+      <div class="flex justify-between items-center mb-2">
+        <button 
+          class="px-2 py-1 bg-gray-200 border-2 border-white border-b-gray-800 border-r-gray-800 active:border-t-gray-800 active:border-l-gray-800 active:border-b-white active:border-r-white text-xs font-bold"
+          onclick="playSound('click'); document.getElementById('pixel-upload').click();"
+        >
+          📁 Load Image (上传)
+        </button>
+        <input type="file" id="pixel-upload" accept="image/*" style="display: none;" onchange="handlePixelUpload(event)">
+        
+        <button 
+          id="pixel-save-btn"
+          class="px-2 py-1 bg-gray-200 border-2 border-white border-b-gray-800 border-r-gray-800 active:border-t-gray-800 active:border-l-gray-800 active:border-b-white active:border-r-white text-xs font-bold opacity-50 cursor-not-allowed"
+          onclick="playSound('click'); downloadPixelImage();"
+          disabled
+        >
+          💾 Save (保存)
+        </button>
+      </div>
+      
+      <div class="mb-2 flex items-center gap-2">
+        <label class="text-xs font-bold whitespace-nowrap">Palette / 调色板:</label>
+        <select id="pixel-palette" class="flex-1 text-xs p-1" onchange="updatePixelPalette(event)">
+          <option value="none">None (原色)</option>
+          <option value="gameboy">GameBoy (绿屏)</option>
+          <option value="cga">CGA (洋红/青色)</option>
+          <option value="ega">EGA (16色)</option>
+          <option value="vga">VGA (256色)</option>
+          <option value="mac">Mac OS System 7</option>
+          <option value="win95">Windows 95</option>
+          <option value="nes">NES (红白机)</option>
+          <option value="snes">SNES (超任)</option>
+          <option value="genesis">Sega Genesis</option>
+          <option value="commodore">Commodore 64</option>
+          <option value="zx">ZX Spectrum</option>
+          <option value="amiga">Amiga 500</option>
+          <option value="atari">Atari 2600</option>
+          <option value="pico8">PICO-8</option>
+          <option value="teletext">Teletext</option>
+        </select>
+      </div>
+
+      <div class="mb-2 flex items-center gap-2">
+        <label class="text-xs font-bold whitespace-nowrap">Shittiness / 像素化程度:</label>
+        <input 
+          type="range" 
+          id="pixel-size-slider"
+          min="1" 
+          max="32" 
+          value="8" 
+          oninput="updatePixelSize(event)"
+          class="flex-1"
+        />
+        <span id="pixel-size-display" class="text-xs w-6 text-right">8</span>
+      </div>
+
+      <div class="mb-2 flex items-center gap-2">
+        <label class="text-xs font-bold whitespace-nowrap">RPG Dialog / 对话框:</label>
+        <input type="text" id="pixel-dialog-text" class="flex-1 text-xs p-1" placeholder="Enter text here..." oninput="renderPixelImage()">
+      </div>
+
+      <div class="flex-1 bg-white border-2 border-gray-800 border-t-gray-400 border-l-gray-400 flex items-center justify-center overflow-hidden relative" style="min-height: 300px;">
+        <div id="pixel-placeholder" class="text-gray-400 text-xs text-center p-4">
+          No image loaded.<br/>Please load an image to pixelate.
+        </div>
+        <canvas 
+          id="pixel-canvas"
+          class="max-w-full max-h-full object-contain hidden"
+          style="image-rendering: pixelated;"
+        ></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Window -->
+  <div id="error" class="window" style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 150px;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text">Fatal Error</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close" onclick="closeWindow('error')"></button>
+      </div>
+    </div>
+    <div class="window-body flex-1 overflow-auto m-0 p-2">
+      <div class="flex items-start gap-4 p-4">
+        <div class="text-red-600 text-3xl flex-shrink-0">⚠️</div>
+        <div class="text-sm">
+          <p class="mb-2 font-bold">权限不足。此档案可能导致你的大脑过载。</p>
+          <p>Insufficient permissions. This file may overload your brain.</p>
+        </div>
+      </div>
+      <div class="flex justify-center mt-4">
+        <button class="w-24" onclick="closeWindow('error')">OK / 确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pines Town Window -->
+  <div id="pines_town" class="window" style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 400px;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text">PINEWOOD.EXE</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close" onclick="closeWindow('pines_town')"></button>
+      </div>
+    </div>
+    <div class="window-body flex-1 overflow-auto m-0 p-0">
+      <div class="bg-black w-full h-full flex flex-col items-center justify-center text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://picsum.photos/seed/horror/800/600')] bg-cover opacity-50 mix-blend-overlay"></div>
+        <h1 class="text-4xl font-serif tracking-widest text-red-600 z-10 drop-shadow-[0_0_10px_rgba(255,0,0,0.8)]">松木镇怪谈</h1>
+        <h2 class="text-xl font-serif tracking-widest text-red-400 z-10 mt-2">PINES TOWN</h2>
+        <p class="mt-8 z-10 text-sm text-gray-300 animate-pulse">&gt;&gt;&gt; 视觉冲击加载中 / VISUAL IMPACT LOADING...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Taskbar -->
+  <div class="absolute bottom-0 left-0 right-0 h-8 bg-[#c0c0c0] border-t-2 border-white flex items-center px-1 z-[9999]">
+    <button class="taskbar-btn flex items-center px-2 py-1 font-bold active:bg-[#dfdfdf]" onclick="playSound('click')">
+      <span class="mr-1 text-sm">💩</span>
+      START / COT
+    </button>
+    <div id="taskbar-windows" class="flex-1 flex px-2 gap-1 overflow-x-auto">
+      <!-- Taskbar items will be injected here -->
+    </div>
+    <div class="px-2 py-1 shadow-[inset_1px_1px_0px_#808080,inset_-1px_-1px_0px_#fff] text-xs font-mono ml-1" id="clock">
+      12:00 PM
+    </div>
+  </div>
+
+  <script>
+    let audioCtx = null;
+    function playSound(type) {
+      try {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if (type === 'click') {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(600, now);
+          gainNode.gain.setValueAtTime(0.05, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+          osc.start(now);
+          osc.stop(now + 0.02);
+        } else if (type === 'error') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(150, now);
+          gainNode.gain.setValueAtTime(0.1, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+          osc.start(now);
+          osc.stop(now + 0.5);
+          
+          const osc2 = audioCtx.createOscillator();
+          osc2.type = 'sawtooth';
+          osc2.frequency.setValueAtTime(180, now);
+          osc2.connect(gainNode);
+          osc2.start(now);
+          osc2.stop(now + 0.5);
+
+          const osc3 = audioCtx.createOscillator();
+          osc3.type = 'sawtooth';
+          osc3.frequency.setValueAtTime(210, now);
+          osc3.connect(gainNode);
+          osc3.start(now);
+          osc3.stop(now + 0.5);
+        } else if (type === 'open') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+          gainNode.gain.setValueAtTime(0, now);
+          gainNode.gain.linearRampToValueAtTime(0.1, now + 0.05);
+          gainNode.gain.linearRampToValueAtTime(0.001, now + 0.15);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } else if (type === 'close') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.exponentialRampToValueAtTime(400, now + 0.1);
+          gainNode.gain.setValueAtTime(0, now);
+          gainNode.gain.linearRampToValueAtTime(0.1, now + 0.05);
+          gainNode.gain.linearRampToValueAtTime(0.001, now + 0.15);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        }
+      } catch (e) {
+        console.error("Audio playback failed", e);
+      }
+    }
+
+    // Clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Window Management
+    let zIndexCounter = 10;
+    const windows = {
+      'movie': 'COT Media Player (SHITTY MOVIE)',
+      'games': 'Explorer - C:\\CURSED_ROM (SHITTY GAMES)',
+      'music': 'Winamp Skin (SHITTY MUSIC)',
+      'readme': 'Eat me.txt - Notepad',
+      'register': '注册 / Register',
+      'upload': '上传 / Upload',
+      'ad': 'SHITTY Ad',
+      'donation': '捐赠 / Donate',
+      'pixelator': 'SHITTY PIXELATOR (像素转换器)',
+      'error': 'Fatal Error',
+      'pines_town': 'PINEWOOD.EXE'
+    };
+
+    function updateTaskbar() {
+      const taskbar = document.getElementById('taskbar-windows');
+      taskbar.innerHTML = '';
+      for (const [id, title] of Object.entries(windows)) {
+        const win = document.getElementById(id);
+        if (win.classList.contains('active')) {
+          const btn = document.createElement('button');
+          btn.className = 'taskbar-btn px-2 py-1 text-xs truncate max-w-[150px] font-bold';
+          btn.innerText = title;
+          btn.onclick = () => { playSound('click'); bringToFront(win); };
+          taskbar.appendChild(btn);
+        }
+      }
+    }
+
+    function openWindow(id) {
+      if (id === 'error') {
+        playSound('error');
+      } else {
+        playSound('open');
+      }
+      const win = document.getElementById(id);
+      win.classList.add('active');
+      bringToFront(win);
+      updateTaskbar();
+    }
+
+    function closeWindow(id) {
+      playSound('close');
+      if (id === 'music') {
+        stopMusic();
+      }
+      const win = document.getElementById(id);
+      win.classList.remove('active');
+      updateTaskbar();
+    }
+
+    let currentAudioUrl = null;
+    let pixelImageSrc = null;
+    let pixelSize = 8;
+    let currentPalette = 'none';
+
+    const palettes = {
+      gameboy: [[15, 56, 15], [48, 98, 48], [139, 172, 15], [155, 188, 15]],
+      cga: [[0, 0, 0], [85, 255, 255], [255, 85, 255], [255, 255, 255]],
+      ega: [[0,0,0],[0,0,170],[0,170,0],[0,170,170],[170,0,0],[170,0,170],[170,85,0],[170,170,170],[85,85,85],[85,85,255],[85,255,85],[85,255,255],[255,85,85],[255,85,255],[255,255,85],[255,255,255]],
+      vga: [[0,0,0],[0,0,170],[0,170,0],[0,170,170],[170,0,0],[170,0,170],[170,85,0],[170,170,170],[85,85,85],[85,85,255],[85,255,85],[85,255,255],[255,85,85],[255,85,255],[255,255,85],[255,255,255],[0,0,0],[20,20,20],[32,32,32],[45,45,45],[58,58,58],[71,71,71],[84,84,84],[97,97,97],[109,109,109],[122,122,122],[135,135,135],[148,148,148],[161,161,161],[173,173,173],[186,186,186],[199,199,199]],
+      mac: [[255,255,255],[255,255,0],[255,102,0],[221,0,0],[255,0,153],[51,0,153],[0,0,204],[0,153,255],[0,170,0],[0,102,0],[102,51,0],[153,102,51],[187,187,187],[136,136,136],[68,68,68],[0,0,0]],
+      win95: [[0,0,0],[128,0,0],[0,128,0],[128,128,0],[0,0,128],[128,0,128],[0,128,128],[192,192,192],[128,128,128],[255,0,0],[0,255,0],[255,255,0],[0,0,255],[255,0,255],[0,255,255],[255,255,255]],
+      nes: [[124,124,124],[0,0,252],[0,0,188],[68,40,188],[148,0,132],[168,0,32],[168,16,0],[136,20,0],[80,48,0],[0,120,0],[0,104,0],[0,88,0],[0,64,88],[0,0,0],[0,0,0],[0,0,0],[188,188,188],[0,120,248],[0,88,248],[104,68,252],[216,0,204],[228,0,88],[248,56,0],[228,92,16],[172,124,0],[0,184,0],[0,168,0],[0,168,68],[0,136,136],[0,0,0],[0,0,0],[0,0,0],[248,248,248],[60,188,252],[104,136,252],[152,120,248],[248,120,248],[248,88,152],[248,120,88],[252,160,68],[248,184,0],[184,248,24],[88,216,84],[88,248,152],[0,232,216],[120,120,120],[0,0,0],[0,0,0],[252,252,252],[164,228,252],[184,184,248],[216,184,248],[248,184,248],[248,164,192],[240,208,176],[252,224,168],[248,216,120],[216,248,120],[184,248,184],[184,248,216],[0,252,252],[248,216,248],[0,0,0],[0,0,0]],
+      snes: [[0,0,0],[24,24,24],[49,49,49],[74,74,74],[99,99,99],[123,123,123],[148,148,148],[173,173,173],[198,198,198],[222,222,222],[247,247,247],[255,255,255],[132,0,0],[0,132,0],[0,0,132],[132,132,0],[132,0,132],[0,132,132],[255,0,0],[0,255,0],[0,0,255],[255,255,0],[255,0,255],[0,255,255]],
+      genesis: [[0,0,0],[36,36,36],[72,72,72],[109,109,109],[145,145,145],[182,182,182],[218,218,218],[255,255,255],[0,0,145],[0,0,255],[0,145,0],[0,255,0],[145,0,0],[255,0,0],[0,145,145],[0,255,255],[145,0,145],[255,0,255],[145,145,0],[255,255,0]],
+      commodore: [[0,0,0],[255,255,255],[136,0,0],[170,255,238],[204,68,204],[0,204,85],[0,0,170],[238,238,119],[221,136,85],[102,68,0],[255,119,119],[51,51,51],[119,119,119],[170,255,102],[0,136,255],[187,187,187]],
+      zx: [[0,0,0],[0,0,215],[215,0,0],[215,0,215],[0,215,0],[0,215,215],[215,215,0],[215,215,215],[0,0,0],[0,0,255],[255,0,0],[255,0,255],[0,255,0],[0,255,255],[255,255,0],[255,255,255]],
+      amiga: [[0,0,0],[255,255,255],[136,0,0],[0,136,0],[0,0,136],[136,136,0],[0,136,136],[136,0,136],[255,0,0],[0,255,0],[0,0,255],[255,255,0],[0,255,255],[255,0,255],[136,136,136],[204,204,204]],
+      atari: [[0,0,0],[36,36,36],[72,72,72],[109,109,109],[145,145,145],[182,182,182],[218,218,218],[255,255,255],[68,0,0],[102,0,0],[136,0,0],[170,0,0],[204,0,0],[238,0,0],[255,0,0],[255,34,34],[255,68,68],[255,102,102],[255,136,136],[255,170,170],[255,204,204],[255,238,238]],
+      pico8: [[0,0,0],[29,43,83],[126,37,83],[0,135,81],[171,82,54],[95,87,79],[194,195,199],[255,241,232],[255,0,77],[255,163,0],[255,236,39],[0,228,54],[41,173,255],[131,118,156],[255,119,168],[255,204,170]],
+      teletext: [[0,0,0],[255,0,0],[0,255,0],[255,255,0],[0,0,255],[255,0,255],[0,255,255],[255,255,255]]
+    };
+
+    function handlePixelUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (pixelImageSrc) {
+          URL.revokeObjectURL(pixelImageSrc);
+        }
+        pixelImageSrc = URL.createObjectURL(file);
+        
+        document.getElementById('pixel-placeholder').classList.add('hidden');
+        document.getElementById('pixel-canvas').classList.remove('hidden');
+        
+        const saveBtn = document.getElementById('pixel-save-btn');
+        saveBtn.disabled = false;
+        saveBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        
+        renderPixelImage();
+      }
+    }
+
+    function updatePixelSize(event) {
+      pixelSize = parseInt(event.target.value);
+      document.getElementById('pixel-size-display').innerText = pixelSize;
+      if (pixelImageSrc) {
+        renderPixelImage();
+      }
+    }
+
+    function updatePixelPalette(event) {
+      currentPalette = event.target.value;
+      if (pixelImageSrc) {
+        renderPixelImage();
+      }
+    }
+
+    function applyPalette(imageData, paletteName) {
+      if (paletteName === 'none' || !palettes[paletteName]) return imageData;
+      
+      const data = imageData.data;
+      const palette = palettes[paletteName];
+      
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const a = data[i + 3];
+
+        if (a === 0) continue;
+
+        let minDistance = Infinity;
+        let closestColor = palette[0];
+
+        for (let j = 0; j < palette.length; j++) {
+          const pr = palette[j][0];
+          const pg = palette[j][1];
+          const pb = palette[j][2];
+          
+          const distance = Math.pow(r - pr, 2) + Math.pow(g - pg, 2) + Math.pow(b - pb, 2);
+          
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestColor = palette[j];
+          }
+        }
+
+        data[i] = closestColor[0];
+        data[i + 1] = closestColor[1];
+        data[i + 2] = closestColor[2];
+      }
+      
+      return imageData;
+    }
+
+    function renderPixelImage() {
+      const canvas = document.getElementById('pixel-canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx || !pixelImageSrc) return;
+
+      const img = new Image();
+      img.onload = () => {
+        const MAX_WIDTH = 400;
+        let width = img.width;
+        let height = img.height;
+        if (width > MAX_WIDTH) {
+          height = Math.floor(height * (MAX_WIDTH / width));
+          width = MAX_WIDTH;
+        }
+        canvas.width = width;
+        canvas.height = height;
+
+        const w = Math.max(1, Math.floor(width / pixelSize));
+        const h = Math.max(1, Math.floor(height / pixelSize));
+
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = w;
+        offCanvas.height = h;
+        const offCtx = offCanvas.getContext('2d');
+        if (!offCtx) return;
+
+        offCtx.drawImage(img, 0, 0, w, h);
+        
+        if (currentPalette !== 'none') {
+          const imageData = offCtx.getImageData(0, 0, w, h);
+          const newImageData = applyPalette(imageData, currentPalette);
+          offCtx.putImageData(newImageData, 0, 0);
+        }
+
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(offCanvas, 0, 0, w, h, 0, 0, width, height);
+
+        // Draw RPG Dialog
+        const dialogText = document.getElementById('pixel-dialog-text').value;
+        if (dialogText) {
+          const padding = 10;
+          const boxHeight = 60;
+          const boxY = height - boxHeight - padding;
+          
+          // Draw box
+          ctx.fillStyle = 'rgba(0, 0, 200, 0.8)';
+          ctx.fillRect(padding, boxY, width - padding * 2, boxHeight);
+          
+          // Draw border
+          ctx.strokeStyle = 'white';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(padding, boxY, width - padding * 2, boxHeight);
+          
+          // Draw text
+          ctx.fillStyle = 'white';
+          ctx.font = '16px "Pixelated MS Sans Serif", Arial, sans-serif';
+          ctx.textBaseline = 'top';
+          
+          // Simple text wrapping
+          const maxWidth = width - padding * 4;
+          const words = dialogText.split(' ');
+          let line = '';
+          let y = boxY + padding;
+          
+          for(let n = 0; n < words.length; n++) {
+            const testLine = line + words[n] + ' ';
+            const metrics = ctx.measureText(testLine);
+            const testWidth = metrics.width;
+            if (testWidth > maxWidth && n > 0) {
+              ctx.fillText(line, padding * 2, y);
+              line = words[n] + ' ';
+              y += 20;
+            }
+            else {
+              line = testLine;
+            }
+          }
+          ctx.fillText(line, padding * 2, y);
+        }
+      };
+      img.src = pixelImageSrc;
+    }
+
+    function downloadPixelImage() {
+      const canvas = document.getElementById('pixel-canvas');
+      if (!pixelImageSrc) return;
+      const url = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'shitty_pixel.png';
+      a.click();
+    }
+
+    function handleMusicUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (currentAudioUrl) {
+          URL.revokeObjectURL(currentAudioUrl);
+        }
+        currentAudioUrl = URL.createObjectURL(file);
+        document.getElementById('music-title').innerText = file.name;
+        playMusic();
+      }
+    }
+
+    function playMusic() {
+      const container = document.getElementById('music-player-container');
+      if (currentAudioUrl) {
+        container.innerHTML = `<audio src="${currentAudioUrl}" autoplay></audio>`;
+      } else {
+        container.innerHTML = '<iframe width="0" height="0" src="https://www.youtube.com/embed/tIdIqbv7SPo?autoplay=1" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>';
+      }
+    }
+
+    function stopMusic() {
+      const container = document.getElementById('music-player-container');
+      container.innerHTML = '';
+    }
+
+    function bringToFront(element) {
+      zIndexCounter++;
+      element.style.zIndex = zIndexCounter;
+    }
+
+    // File System
+    let currentPath = 'C:\\CURSED_ROM';
+    const fileSystem = {
+      'C:\\CURSED_ROM': [
+        { name: 'archives', size: '', type: 'File Folder', isFolder: true },
+        { name: '0xDEADBEEF.rom', size: '666 KB', type: 'ROM File', isFolder: false },
+        { name: 'GLITCH_MATRIX.exe', size: '42 MB', type: 'Application', isFolder: false },
+        { name: 'PINEWOOD.EXE', size: '??? MB', type: 'Unknown', isFolder: false },
+      ],
+      'C:\\CURSED_ROM\\archives': [
+        { name: '..', size: '', type: 'File Folder', isFolder: true },
+        { name: 'DO_NOT_OPEN.exe', size: '999 MB', type: 'Application', isFolder: false },
+        { name: 'blood.rom', size: '13 KB', type: 'ROM File', isFolder: false },
+      ]
+    };
+
+    function renderFileList() {
+      const fileList = document.getElementById('file-list');
+      const gamesTitle = document.getElementById('games-title');
+      
+      gamesTitle.innerText = `Explorer - ${currentPath} (SHITTY GAMES)`;
+      windows['games'] = gamesTitle.innerText;
+      updateTaskbar();
+
+      fileList.innerHTML = '';
+      const files = fileSystem[currentPath] || [];
+      
+      files.forEach(file => {
+        const tr = document.createElement('tr');
+        tr.className = 'cursor-pointer hover:bg-blue-600 hover:text-white';
+        tr.ondblclick = () => handleFileDoubleClick(file);
+        
+        const icon = file.isFolder ? '📁' : '📄';
+        
+        tr.innerHTML = `
+          <td class="py-1">${icon} ${file.name}</td>
+          <td>${file.size}</td>
+          <td>${file.type}</td>
+        `;
+        fileList.appendChild(tr);
+      });
+    }
+
+    function handleFileDoubleClick(file) {
+      if (file.isFolder) {
+        playSound('click');
+        if (file.name === '..') {
+          currentPath = currentPath.substring(0, currentPath.lastIndexOf('\\'));
+        } else {
+          currentPath = currentPath + '\\' + file.name;
+        }
+        renderFileList();
+      } else {
+        if (file.name === 'PINEWOOD.EXE') {
+          openWindow('pines_town');
+        } else if (file.name.endsWith('.rom') || file.name.endsWith('.exe')) {
+          openWindow('error');
+        }
+      }
+    }
+
+    // Initialize file list
+    renderFileList();
+
+    // Draggable Windows
+    document.querySelectorAll('.window').forEach(win => {
+      const titleBar = win.querySelector('.title-bar');
+      let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+      
+      titleBar.onmousedown = dragMouseDown;
+
+      function dragMouseDown(e) {
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+        bringToFront(win);
+      }
+
+      function elementDrag(e) {
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        
+        // Handle transform translate if present (for centered windows)
+        if (win.style.transform.includes('translate')) {
+          win.style.transform = 'none';
+          win.style.top = (win.offsetTop - pos2) + "px";
+          win.style.left = (win.offsetLeft - pos1) + "px";
+        } else {
+          win.style.top = (win.offsetTop - pos2) + "px";
+          win.style.left = (win.offsetLeft - pos1) + "px";
+        }
+      }
+
+      function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+    });
+
+    // Initialize taskbar
+    updateTaskbar();
+  </script>
+</body>
+</html>
