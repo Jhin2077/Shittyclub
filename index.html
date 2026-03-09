@@ -164,20 +164,8 @@
       <div class="text-center text-xs mb-2 text-red-500 animate-pulse font-bold">
         WARNING: AUDITORY CONTAMINATION<br/>警告：听觉污染
       </div>
-      <div class="flex-1 border border-[#0f0] p-1 flex items-end gap-1 mb-2" style="min-height: 40px; max-height: 40px;">
-        <div class="w-full bg-[#0f0]" style="height: 30%"></div>
-        <div class="w-full bg-[#0f0]" style="height: 80%"></div>
-        <div class="w-full bg-[#0f0]" style="height: 50%"></div>
-        <div class="w-full bg-[#0f0]" style="height: 100%"></div>
-        <div class="w-full bg-[#0f0]" style="height: 20%"></div>
-        <div class="w-full bg-[#0f0]" style="height: 70%"></div>
-        <div class="w-full bg-[#0f0]" style="height: 90%"></div>
-        <div class="w-full bg-[#0f0]" style="height: 40%"></div>
-        <div class="w-full bg-[#0f0]" style="height: 60%"></div>
-        <div class="w-full bg-[#0f0]" style="height: 85%"></div>
-      </div>
       <div class="flex justify-between items-center text-xs mb-2">
-        <span class="truncate flex-1 mr-2" id="music-title">Stevie Wonder - Superstition</span>
+        <span class="truncate flex-1 mr-2" id="music-title">Ready / 准备就绪</span>
         <div class="flex gap-1">
           <button class="bg-gray-700 text-white px-2 py-1 border border-gray-500" title="Open Local File" onclick="playSound('click'); document.getElementById('music-upload').click();">⏏️</button>
           <button class="bg-gray-700 text-white px-2 py-1 border border-gray-500" onclick="playSound('click'); playPrevious();">⏪</button>
@@ -613,14 +601,17 @@ If you find PINEWOOD.EXE, whatever you do, do not...
     // You can add your local MP3 files here by changing the type to 'local' and src to your filename
     // Example: { title: "My Song", type: "local", src: "my-song.mp3" }
     const playlist = [
-      { title: "Stevie Wonder - Superstition", type: "youtube", src: "tIdIqbv7SPo" },
-      { title: "Local MP3 Example 1", type: "local", src: "example1.mp3" },
-      { title: "Local MP3 Example 2", type: "local", src: "example2.mp3" }
+      { title: "example1.mp3", type: "local", src: "example1.mp3" },
+      { title: "example2.mp3", type: "local", src: "example2.mp3" }
     ];
 
     function renderPlaylist() {
       const container = document.getElementById('playlist-container');
       container.innerHTML = '';
+      if (playlist.length === 0) {
+        container.innerHTML = '<div class="text-gray-500 text-center mt-4">Playlist is empty.<br/>Click ⏏️ to upload MP3s.</div>';
+        return;
+      }
       playlist.forEach((track, index) => {
         const div = document.createElement('div');
         div.className = `p-1 cursor-pointer hover:bg-[#0f0] hover:text-[#111] ${index === currentPlaylistIndex ? 'bg-[#0f0] text-[#111]' : ''}`;
@@ -633,6 +624,12 @@ If you find PINEWOOD.EXE, whatever you do, do not...
       });
     }
 
+    function handleAudioError() {
+      if (playlist.length > 0 && playlist[currentPlaylistIndex]) {
+        document.getElementById('music-title').innerText = "❌ File Not Found: " + playlist[currentPlaylistIndex].title;
+      }
+    }
+
     function playTrack(index) {
       if (index < 0 || index >= playlist.length) return;
       currentPlaylistIndex = index;
@@ -642,16 +639,8 @@ If you find PINEWOOD.EXE, whatever you do, do not...
       renderPlaylist();
       
       const container = document.getElementById('music-player-container');
-      if (track.type === 'youtube') {
-        currentAudioUrl = null;
-        container.innerHTML = `<iframe width="0" height="0" src="https://www.youtube.com/embed/${track.src}?autoplay=1" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>`;
-      } else if (track.type === 'local') {
-        currentAudioUrl = track.src;
-        container.innerHTML = `<audio src="${currentAudioUrl}" autoplay onended="playNext()"></audio>`;
-      } else if (track.type === 'uploaded') {
-        currentAudioUrl = track.src;
-        container.innerHTML = `<audio src="${currentAudioUrl}" autoplay onended="playNext()"></audio>`;
-      }
+      currentAudioUrl = track.src;
+      container.innerHTML = `<audio src="${currentAudioUrl}" autoplay onended="playNext()" onerror="handleAudioError()"></audio>`;
     }
 
     function playNext() {
